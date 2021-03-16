@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>u ni block</title>
+    </head>
+    <body>
+        <style>
+            body {
+                text-align: center;
+            }
+            form {
+                display: inline-block;
+            }
+            .container {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                -moz-transform: translateX(-50%) translateY(-50%);
+                -webkit-transform: translateX(-50%) translateY(-50%);
+                transform: translateX(-50%) translateY(-50%)
+            }
+        </style>
+        <div class="container"><br>
+        <img src="uniblock.png" />
+            <br>
+            <form action="/url" id="urlPost" method="POST">
+				<input type="text" name="rurl" placeholder="url">
+				<input type="text" name="key" placeholder="Put key here :)">
+				<input type="checkbox" name="useIframe" placeholder="use iframe?">
+				<input type="submit" value="stop going to porn">
+            </form>
+        </div>
+    </body>
+</html>
