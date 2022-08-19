@@ -1,31 +1,34 @@
-const unblocker = require("unblocker");
+const fs = require("fs");
 const express = require("express");
+const Unblocker = require("unblocker");
 
-let Unblocker = new unblocker({prefix: '/unblock/'});
-
+let unblocker = new Unblocker({prefix: '/search/'});
 let app = express();
-app.use(Unblocker);
-app.use(express.static('views'));
-app.use(express.urlencoded({extended: true}));
+app.use(unblocker);
+app.use(express.static('views/'));
+app.use(express.urlencoded());
 
-app.get('/', function(req, res) { 
-    res.sendFile("index.html"); 
+
+app.get('/', function(req, res){ res.sendFile("index.html"); });
+app.post('/', function(req, res) {
+    let url = req.body.url;
+    let ts = Date.now();
+
+    let date_ob = new Date(ts);
+    let date = date_ob.getDate();
+    let month = date_ob.getMonth() + 1;
+    let year = date_ob.getFullYear();
+    
+    // prints date & time in YYYY-MM-DD format
+    let cur_date = year + "-" + month + "-" + date;
+
+    fs.appendFile('logs/' + cur_date + '.log', url + '\n', function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+    });
+    
+    res.redirect('/search/' + url);
 });
 
-app.post('/site', function(req, res) {
-    if (req.body.url) {
-        if (/^(?:[a-z]+:)?\/\//i.test(req.body.url)) res.redirect('/unblock/https://'+req.body.url);
-        else res.redirect('/unblock/https://'+req.body.url.replace("https://", ""));
 
-        
-    } else 
-        res.sendFile("no-url.html");
-
-
-    console.log(req.body);
-});
-
-
-app.listen(3000, () => {
-    console.log("Server started on port 3000");
-});
+app.listen(8080).on('upgrade', unblocker.onUpgrade);
